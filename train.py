@@ -58,9 +58,10 @@ def main():
         raise Exception(msg)
     dataset_dir = os.path.join(conf['dataset_dif'], conf['dataset'])
     file_list = os.listdir(dataset_dir)
-    train_iter = chainer.datasets.ImageDataset(
+    dataset = chainer.datasets.ImageDataset(
         paths=file_list, root=dataset_dir)
-
+    train_iter = chainer.iterators.SerialIterator(dataset=dataset, batch_size=conf[
+                                                  'batch_size'], repeat=True, shuffle=True)
     # Set up a trainer
     updater = LSGANUpdater(
         models=(gen, dis),
