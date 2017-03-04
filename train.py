@@ -6,7 +6,7 @@ import datetime
 import json
 
 import yaml
-
+import numpy as np
 import chainer
 from chainer import training
 from chainer.traininig import extensions
