@@ -62,6 +62,12 @@ def main():
         paths=file_list, root=dataset_dir)
     train_iter = chainer.iterators.SerialIterator(dataset=dataset, batch_size=conf[
                                                   'batch_size'], repeat=True, shuffle=True)
+    if conf['n_process'] > 1:
+        train_iter = chainer.iterators.MultiprocessIterator(dataset=dataset, batch_size=conf[
+                                                            'batch_size'], repeat=True, shuffle=True, n_processes=conf['n_process'])
+    else:
+        train_iter = chainer.iterators.SerialIterator(dataset=dataset, batch_size=conf[
+                                                      'batch_size'], repeat=True, shuffle=True)
     # Set up a trainer
     updater = LSGANUpdater(
         models=(gen, dis),

@@ -1,5 +1,6 @@
 batch_size: 32
 epoch: 1000
+n_process: 4
 gpu: 0
 dataset_dir: 'dataset'
 dataset: 'bedroom'
