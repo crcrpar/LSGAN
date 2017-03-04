@@ -11,26 +11,33 @@ class Generator(chainer.Chain):
     """Discriminator for scene generation"""
 
     def __init__(self, name=None):
-        _layers = {}
-        _layers['fc_1'] = L.Linear(in_size=1024, out_size=7*7*256)
-        _layers['deconv_1'] = L.Deconvolution2D(in_channels=256, out_channels=256, ksize=(3, 3), stride=2)
-        _layers['bn_1'] = L.BatchNormalization(size=256)
-        _layers['deconv_2'] = L.Deconvolution2D(in_channels=256, out_channels=256, ksize=(3, 3), stride=1)
-        _layers['bn_2'] = L.BatchNormalization(size=256)
-        _layers['deconv_3'] = L.Deconvolution(in_channels=256, out_channels=256, ksize=(3, 3), stride=2)
-        _layers['bn_3'] = L.BatchNormalization(size=256)
-        _layers['deconv_4'] = L.Deconvolution(in_channels=256, out_channels=256, ksize=(3, 3), stride=1)
-        _layers['bn_4'] = L.BatchNormalization(size=256)
-        _layers['deconv_5'] = L.Deconvolution(in_channels=256, out_channels=128, ksize=(3, 3), stride=2)
-        _layers['bn_5'] = L.BatchNormalization(size=64)
-        _layers['deconv_6'] = L.Deconvolution(in_channels=128, out_channels=64, kszie=(3, 3), stride=2)
-        _layers['bn_6'] = L.BatchNormalization(size=64)
-        _layers['deconv_7'] = L.Deconvolution(in_channels=64, out_channels=3, ksize=(3, 3), stride=2)
+        self._layers = {}
+        self._layers['fc_1'] = L.Linear(in_size=1024, out_size=7 * 7 * 256)
+        self._layers['deconv_1'] = L.Deconvolution2D(
+            in_channels=256, out_channels=256, ksize=(3, 3), stride=2)
+        self._layers['bn_1'] = L.BatchNormalization(size=256)
+        self._layers['deconv_2'] = L.Deconvolution2D(
+            in_channels=256, out_channels=256, ksize=(3, 3), stride=1)
+        self._layers['bn_2'] = L.BatchNormalization(size=256)
+        self._layers['deconv_3'] = L.Deconvolution(
+            in_channels=256, out_channels=256, ksize=(3, 3), stride=2)
+        self._layers['bn_3'] = L.BatchNormalization(size=256)
+        self._layers['deconv_4'] = L.Deconvolution(
+            in_channels=256, out_channels=256, ksize=(3, 3), stride=1)
+        self._layers['bn_4'] = L.BatchNormalization(size=256)
+        self._layers['deconv_5'] = L.Deconvolution(
+            in_channels=256, out_channels=128, ksize=(3, 3), stride=2)
+        self._layers['bn_5'] = L.BatchNormalization(size=64)
+        self._layers['deconv_6'] = L.Deconvolution(
+            in_channels=128, out_channels=64, kszie=(3, 3), stride=2)
+        self._layers['bn_6'] = L.BatchNormalization(size=64)
+        self._layers['deconv_7'] = L.Deconvolution(
+            in_channels=64, out_channels=3, ksize=(3, 3), stride=2)
         if name is None:
             name = "Generator"
         self.name = name
-        self.trian=True
-        super(Generator, self).__init__(**_layers)
+        self.trian = True
+        super(Generator, self).__init__(**self._layers)
 
     def __call__(self, z=None):
         if z is None:
@@ -53,21 +60,25 @@ class Discriminator(chainer.Chain):
     """Discriminator for scene generation"""
 
     def __init__(self, name=None):
-        _layers = {}
-        _layers['conv_1'] = L.Convolution2D(in_channels=3, out_channels=64, ksize=(5, 5), stride=2)
-        _layers['bn_1'] = L.BatchNormalization(size=64)
-        _layers['conv_2'] = L.Convolution2D(in_channels=64, out_channels=128, ksize=(5, 5), stride=2)
-        _layers['bn_2'] = L.BatchNormalization(size=128)
-        _layers['conv_3'] = L.Convolution2D(in_channels=128, out_channels=256, ksize=(5, 5), stride=2)
-        _layers['bn_3'] = L.BatchNormalization(size=256)
-        _layers['conv_4'] = L.Convolution2D(in_channels=256, out_chaneels=512, ksize=(5, 5), stride=2)
-        _layers['bn_4'] = L.BatchNormalization(size=512)
-        _layers['fc_1'] = L.Linear(in_size=None, out_size=1)
+        self._layers = {}
+        self._layers['conv_1'] = L.Convolution2D(
+            in_channels=3, out_channels=64, ksize=(5, 5), stride=2)
+        self._layers['bn_1'] = L.BatchNormalization(size=64)
+        self._layers['conv_2'] = L.Convolution2D(
+            in_channels=64, out_channels=128, ksize=(5, 5), stride=2)
+        self._layers['bn_2'] = L.BatchNormalization(size=128)
+        self._layers['conv_3'] = L.Convolution2D(
+            in_channels=128, out_channels=256, ksize=(5, 5), stride=2)
+        self._layers['bn_3'] = L.BatchNormalization(size=256)
+        self._layers['conv_4'] = L.Convolution2D(
+            in_channels=256, out_chaneels=512, ksize=(5, 5), stride=2)
+        self._layers['bn_4'] = L.BatchNormalization(size=512)
+        self._layers['fc_1'] = L.Linear(in_size=None, out_size=1)
         if name is None:
             name = "Discriminator"
         self.name = name
         self.train = True
-        super(Discriminator, self).__init__(**_layers)
+        super(Discriminator, self).__init__(**self._layers)
 
     def __call__(self, x):
         h1 = F.leaky_relu(self.bn_1(self.conv_1(x), test=not self.train))

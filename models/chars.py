@@ -12,19 +12,19 @@ class Generator(chainer.Chain):
     """Generator for Chinese characters generation"""
 
     def __init__(self, name=None):
-        _layers = {
-                'fc_y': L.Linear(in_size=3740, out_size=256),
-                'fc_1': L.Linear(in_size=1024 + 256, out_size=7 * 7 * 128),
-                'bn': L.BatchNormalization(size=7 * 7 * 128),
-                'deconv_1': L.Deconvolution2D(in_channels=128, out_channels=128, ksize=(5, 5), stride=2),
-                'bn_1': L.BatchNormalization(size=128),
-                'deconv_2': L.Deconvolution(in_channels=128, out_channels=1, kszie=(5, 5), stride=2)
-                }
+        self._layers = {
+            'fc_y': L.Linear(in_size=3740, out_size=256),
+            'fc_1': L.Linear(in_size=1024 + 256, out_size=7 * 7 * 128),
+            'bn': L.BatchNormalization(size=7 * 7 * 128),
+            'deconv_1': L.Deconvolution2D(in_channels=128, out_channels=128, ksize=(5, 5), stride=2),
+            'bn_1': L.BatchNormalization(size=128),
+            'deconv_2': L.Deconvolution(in_channels=128, out_channels=1, kszie=(5, 5), stride=2)
+        }
         if name is None:
             name = "Generator"
         self.name = name
         self.train = True
-        super(Generator, self).__init__(**_layers)
+        super(Generator, self).__init__(**self._layers)
 
     def __call__(self, y, z=None):
         if y.dtype == numpy.int:
@@ -46,20 +46,20 @@ class Discriminator(chainer.Chain):
     """Discriminator for Chainese characters generation"""
 
     def __init__(self, name=None):
-        _layers = {
-                'fc_y': L.Linear(in_size=3740, out_size=256),
-                'conv_1': L.Convolution2D(in_channels=1, out_channels=256, ksize=(5, 5), stride=2),
-                'conv_2': L.Convolution2D(in_channels=256, out_channels=320, ksize=(5, 5), stride=2),
-                'bn_1': L.BatchNormalization(size=320),
-                'fc_1': L.Linear(in_size=None, out_size=1024),
-                'bn_2': L.BatchNormalization(size=1024),
-                'fc_2': L.Linear(in_size=1024, out_size=1)
-                }
+        self._layers = {
+            'fc_y': L.Linear(in_size=3740, out_size=256),
+            'conv_1': L.Convolution2D(in_channels=1, out_channels=256, ksize=(5, 5), stride=2),
+            'conv_2': L.Convolution2D(in_channels=256, out_channels=320, ksize=(5, 5), stride=2),
+            'bn_1': L.BatchNormalization(size=320),
+            'fc_1': L.Linear(in_size=None, out_size=1024),
+            'bn_2': L.BatchNormalization(size=1024),
+            'fc_2': L.Linear(in_size=1024, out_size=1)
+        }
         if name is None:
             name = "Generator"
         self.name = name
         self.train = True
-        super(Discriminator, self).__init__(**_layers)
+        super(Discriminator, self).__init__(**self._layers)
 
     def __call__(self, x, y):
         if y.dtype == numpy.int:
