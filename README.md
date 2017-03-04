@@ -4,7 +4,7 @@ URL: https://arxiv.org/abs/1611.04076
 
 Chainer: http://chainer.org/
 
-** NOTE: WIP
+__NOTE: WIP__
 
 ## Environments
 - numpy: 1.12.0
