@@ -1,3 +1,5 @@
 .python_version
 
 *.pyc
+
+dataset/
