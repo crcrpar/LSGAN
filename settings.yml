@@ -1,0 +1,9 @@
+batch_size: 32
+epoch: 1000
+gpu: 0
+dataset: 'bedroom'
+out: 'result'
+resume: ''
+seed: '0'
+snapshot_interval: 10
+display_interval: 100 
