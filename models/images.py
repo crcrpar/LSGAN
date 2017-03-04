@@ -10,7 +10,7 @@ from chainer import links as L
 class Generator(chainer.Chain):
     """Discriminator for scene generation"""
 
-    def __init__(self, name=None):
+    def __init__(self, batch_size, name=None):
         self._layers = {}
         self._layers['fc_1'] = L.Linear(in_size=1024, out_size=7 * 7 * 256)
         self._layers['deconv_1'] = L.Deconvolution2D(
@@ -33,16 +33,23 @@ class Generator(chainer.Chain):
         self._layers['bn_6'] = L.BatchNormalization(size=64)
         self._layers['deconv_7'] = L.Deconvolution(
             in_channels=64, out_channels=3, ksize=(3, 3), stride=2)
+        self.batch_size = batch_size
         if name is None:
             name = "Generator"
         self.name = name
         self.trian = True
         super(Generator, self).__init__(**self._layers)
 
-    def __call__(self, z=None):
+    def __call__(self, z=None, test=False, bs=None):
+        if bs is None:
+            bs = self.batch_size
         if z is None:
-            z = numpy.random.uniform(low=-1.0, high=1.0, size=1024)
+            z = numpy.random.uniform(low=-1.0, high=1.0, size=(bs, 1024))
+        if test:
+            self.set_mode(test)
+            z = chainer.Variable(z, volatile=test)
         h1 = F.relu(self.fc_1(z))
+        h1 = F.reshape((self.batch_size, 1024, 1, 1))
         h2 = F.relu(self.bn_1(self.deconv_1(h1), test=not self.train))
         h3 = F.relu(self.bn_2(self.deconv_2(h2), test=not self.train))
         h4 = F.relu(self.bn_3(self.deconv_3(h3), test=not self.train))
@@ -50,9 +57,11 @@ class Generator(chainer.Chain):
         h6 = F.relu(self.bn_5(self.deconv_5(h5), test=not self.train))
         h7 = F.relu(self.bn_6(self.deconv_6(h6), test=not self.train))
         _out = F.relu(self.deconv_7(h7))
+        if test:
+            self.set_mode(not test)
         return _out
 
-    def train(self, _train):
+    def set_mode(self, _train):
         self.train = _train
 
 

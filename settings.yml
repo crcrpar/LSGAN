@@ -1,6 +1,7 @@
 batch_size: 32
 epoch: 1000
 gpu: 0
+dataset_dir: 'dataset'
 dataset: 'bedroom'
 out: 'result'
 resume: ''
